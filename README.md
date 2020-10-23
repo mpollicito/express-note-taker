@@ -1,2 +1,5 @@
 # express-note-taker
-App made possible by Express to allow you to take notes!
+This app was made possible by using Express js to allow you to take notes!
+
+## Description
+
