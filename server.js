@@ -2,6 +2,7 @@ const { response } = require("express");
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const { dirname } = require("path");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -26,5 +27,26 @@ app.get("/api/notes", function(req, res){
     res.json(savedNotes)
 });
 
+app.post("/api/notes", function(req, res){
+    savedNotes = fs.readFileSync(path.join(__dirname,"/db/db.json"))
+    savedNotes = JSON.parse(savedNotes)
+    req.body.id = savedNotes.length
+    savedNotes.push(req.body)
+    savedNotes = JSON.stringify(savedNotes)
+    fs.writeFileSync(path.join(__dirname,"/db/db.json"), savedNotes)
+    res.json(savedNotes)
+});
+
+app.delete("/api/notes/:id", function(req, res){
+    savedNotes = fs.readFileSync(path.join(__dirname,"/db/db.json"))
+    savedNotes = JSON.parse(savedNotes)
+    req.body.id = savedNotes.length
+    savedNotes = savedNotes.filter((note) => {
+        return note.id != req.params.id
+    })
+    savedNotes = JSON.stringify(savedNotes)
+    fs.writeFileSync(path.join(__dirname,"/db/db.json"), savedNotes)
+    res.json(savedNotes)
+});
 
 app.listen(PORT, () => console.log('Listening on localhost http://localhost:' + PORT));
